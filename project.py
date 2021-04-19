@@ -651,7 +651,7 @@ def messagesDump():
     print("Dumping the database")
     dump_success = 1
     try:
-        retcode = subprocess.call(["pg_dump", " --no-owner ", "-d", "messages", "-f", "dbdump/db.sql" ])
+        retcode = subprocess.call(["pg_dump", "-d", "messages",  "--no-owner", "-f", "dbdump/db.sql" ])
         print("process return code:" + str(retcode))
 
     except Exception as e:
