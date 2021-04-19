@@ -115,7 +115,7 @@ It is written in **Python** (<https://www.python.org/>) and also uses **Flask** 
 
 * It is also possible for everyone (not authenticated) to obtain a `database dump` by a GET query to the `/dbdump` path, which will retrieve the database content in the standard PostgreSQL format (plain text). Please, see detailed instructions at (<https://www.postgresql.org/docs/9.3/app-pgdump.html>). It is possible to restore with `pg_restore` (<https://www.postgresql.org/docs/9.3/app-pgrestore.html>).
 
-* For the successful dumping, the `UPLOAD_FOLDER` variable (inside the `project.py`) must be the relative path directory of the dump file on the server.
+* The `UPLOAD_FOLDER` variable (inside the `project.py`) should be the absolute path directory of the dump file on the server.
 
 * The app implements `rate limiting` (<https://en.wikipedia.org/wiki/Rate_limiting>).
 

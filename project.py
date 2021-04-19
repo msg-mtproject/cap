@@ -43,7 +43,7 @@ app = Flask(__name__)
 # Content Security Policies and implementation
 csp = {
     'default-src': '\'self\'',
-    'script-src': [
+    'script-src': [ 
         '\'self\'',
         'https://m4test.com/static/checkFunctions.js',
         'http://localhost:8080/static/checkFunctions.js',
@@ -55,13 +55,13 @@ csp = {
         'https://m4test.com/static/bootstrap.min.css',
         'http://localhost:8080/static/styles.css',
         'http://localhost:8080/static/bootstrap.min.css',
-        ],
+        ],   
     'font-src': [
         'https://fonts.gstatic.com/s/roboto/',
-        ]
+        ] 
 }
 
-# using Talisman
+# using Talisman 
 talisman = Talisman(
     app,
     content_security_policy=csp,
@@ -72,11 +72,11 @@ talisman = Talisman(
 # so we can choose the order of variables to show.
 app.config.update(
     JSON_SORT_KEYS=False,
-    UPLOAD_FOLDER="dbdump",
+    UPLOAD_FOLDER="/home/messages/messages/dbdump",
 )
 
 #Secret key automatically generated, used by Flask to encrypt the session cookies
-app.secret_key = ''.join(random.choice(string.ascii_uppercase +
+app.secret_key = ''.join(random.choice(string.ascii_uppercase + 
         string.ascii_lowercase + string.digits) for x in range(32))
 
 #Connect to Database and create database session
@@ -93,7 +93,7 @@ if os.path.exists(file_uri):
     f_key = key_file.read()
     f = Fernet(f_key)
 else:
-    print("Error: 'key.txt' didn't found")
+    #print("Error: 'key.txt' didn't found")
     exit()
 
 #Load the PIN for user creation
@@ -102,7 +102,7 @@ if os.path.exists(file_uri):
     pin_file = open(pin_file_uri, "rt")
     PIN = pin_file.readline().splitlines()[0]
 else:
-    print("Error: 'pin.txt' didn't found")
+    #print("Error: 'pin.txt' didn't found")
     exit()
 
 #Redis connection
@@ -167,7 +167,7 @@ def inject_x_rate_headers(response):
 @app.route('/index.html')
 @ratelimit(limit=30)
 def showLogin():
-    print('in showLogin')
+    #print('in showLogin')
     # Create a state token to prevent request forgery.
     # Store it in the session for later validation.
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
@@ -183,11 +183,11 @@ def showLogin():
 @ratelimit(limit=30)
 def local_login():
 
-    print('at local login')
+    #print('at local login')
     #print(request.form)
 
     #Test for valid state token (unique session anti-forgery)
-    print('testing for valid state token')
+    #print('testing for valid state token')
     if request.form.get('state') != login_session.get('state'):
         response = make_response(json.dumps('Invalid state parameter'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -198,31 +198,31 @@ def local_login():
 
     #Check to see if there are arguments
     if not username or not password:
-        print("missing arguments")
-        msg = ["Missing arguments.",
+        #print("missing arguments")
+        msg = ["Missing arguments.", 
                "Please, verify the data informed."]
         return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
     #Check if the user exists
-    print('verifying username')
+    #print('verifying username')
     id = -1
     users = session.query(User).all()
     for user in users:
         decrypted_username = f.decrypt(user.username).decode()
-        print("username:", username)
+        #print("username:", username)
         if username == decrypted_username:
             id = user.id
 
     user = session.query(User).filter_by(id=id).first()
     if not user:
         # render intermediate screen
-        msg = ["Login is not possible for this user.",
+        msg = ["Login is not possible for this user.", 
                 "The username is not known."]
         return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
 
     #Check the password
-    print('verifying the password')
+    #print('verifying the password')
     #print('nonce:' + csp_nonce())
     if user.verify_password(password):
         #Loggin the user
@@ -231,15 +231,15 @@ def local_login():
         login_session['username'] = f.decrypt(user.username).decode()
         login_session['provider'] = 'local'
         # render intermediate screen
-        msg = ["Login Successful for: " + login_session['name'],
+        msg = ["Login Successful for: " + login_session['name'], 
                 "with the username: "  + login_session['username']]
-        return render_template('message.html', msg=msg,
-                                dest="/user/" + str(login_session['user_id']) + "/inbox",
+        return render_template('message.html', msg=msg, 
+                                dest="/user/" + str(login_session['user_id']) + "/inbox", 
                                 my_time=4000)
 
     else:
         # render intermediate screen
-        msg = ["Login is not possible.",
+        msg = ["Login is not possible.", 
                 "Please, verify the password."]
         return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
@@ -249,13 +249,13 @@ def local_login():
 @app.route('/reset_password', methods=['GET', 'POST'])
 @ratelimit(limit=30)
 def resetPassword():
-    print('at resetPassword')
+    #print('at resetPassword')
 
     #Process the get username form (getUsername.html)
     if request.method == 'POST' and request.form.get('get_username'):
-        print("processing getUsername.html POST")
+        #print("processing getUsername.html POST")
         #Test for valid state token (unique session anti-forgery atack code)
-        print('testing for valid state token')
+        #print('testing for valid state token')
         if request.form.get('state') != login_session.get('state'):
             response = make_response(json.dumps('Invalid state parameter'), 401)
             response.headers['Content-Type'] = 'application/json'
@@ -265,36 +265,36 @@ def resetPassword():
 
         #Check to see if there are arguments
         if not username:
-            print("missing arguments")
+            #print("missing arguments")
             # render intermediate screen
-            msg = ["Missing arguments.",
+            msg = ["Missing arguments.", 
                     "Please, verify the data informed."]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
         #Check if the user exists
-        print('verifying username')
+        #print('verifying username')
         id = -1
         users = session.query(User).all()
         for user in users:
             decrypted_username = f.decrypt(user.username).decode()
-            print("username:", username)
+            #print("username:", username)
             if username == decrypted_username:
                 id = user.id
 
         user = session.query(User).filter_by(id=id).first()
         if not user:
             # render intermediate screen
-            msg = ["Reseting is not possible for this user.",
+            msg = ["Reseting is not possible for this user.", 
                     "The username is not known."]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
         #Check if security question and security question answer exists
         security_question = f.decrypt(user.security_question).decode()
-        #print("User security question:" + security_question)
+        ##print("User security question:" + security_question)
         security_question_answer_hash = user.security_question_answer_hash
         if (not security_question) or (not security_question_answer_hash):
             # render intermediate screen
-            msg = ["Reseting is not possible for this user.",
+            msg = ["Reseting is not possible for this user.", 
                     "The security question or its answer is not registered."]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
@@ -302,9 +302,9 @@ def resetPassword():
 
     #Process the reset password form (resetPassword.html)
     if request.method == 'POST' and request.form.get('reset_password'):
-        print("processing resetPassword.html POST")
+        #print("processing resetPassword.html POST")
         #Test for valid state token (unique session anti-forgery atack code)
-        print('testing for valid state token')
+        #print('testing for valid state token')
         if request.form.get('state') != login_session.get('state'):
             response = make_response(json.dumps('Invalid state parameter'), 401)
             response.headers['Content-Type'] = 'application/json'
@@ -323,34 +323,34 @@ def resetPassword():
         #print("conf_new_security_question_answer", conf_new_security_question_answer)
 
         if pin != PIN:
-            print("incorrect PIN")
+            #print("incorrect PIN")
             # render intermediate screen
-            msg = ["Reseting the password is not possible.",
+            msg = ["Reseting the password is not possible.", 
                    "You are not authorized (incorrect PIN)."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
         #Check to see if there are arguments
         if not new_password:
-            print("missing password")
+            #print("missing password")
             # render intermediate screen
-            msg = ["Missing password.",
+            msg = ["Missing password.", 
                    "Please, verify the data informed."]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
         #Check to see if new password confirmation matches
         if new_password != conf_new_password:
-            print("password does not match")
+            #print("password does not match")
             # render intermediate screen
-            msg = ["Reseting the password is not possible.",
+            msg = ["Reseting the password is not possible.", 
                    "'Password' and 'Confirmation' do not match. "]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
 
         #Check to see if security question answer confirmation matches
         if (new_security_question_answer) and (new_security_question_answer != conf_new_security_question_answer):
-            print("security question answer does not match")
+            #print("security question answer does not match")
             # render intermediate screen
-            msg = ["Reseting the password is not possible.",
+            msg = ["Reseting the password is not possible.", 
                    "'New Answer' and 'Confirm the New Answer' do not match. "]
             return render_template('message.html', msg=msg, dest="/reset_password", my_time=8000)
 
@@ -365,14 +365,14 @@ def resetPassword():
             session.add(userToEdit)
             session.commit()
             # render intermediate screen
-            msg = ["Password for User " +  f.decrypt(userToEdit.username).decode() +
+            msg = ["Password for User " +  f.decrypt(userToEdit.username).decode() + 
                     " successfully reseted!", "Returning to the login page..."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
         else:
-            print("security question does not match")
+            #print("security question does not match")
             # render intermediate screen
-            msg = ["Reseting the password is not possible.",
+            msg = ["Reseting the password is not possible.", 
                    "Security answer is incorrect."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
@@ -387,7 +387,7 @@ def resetPassword():
 @app.route('/new_user', methods=['GET', 'POST'])
 @ratelimit(limit=30, per=60*60*12)
 def new_user():
-    print('at new user')
+    #print('at new user')
 
     if request.method == 'GET':
         state = ''.join(random.choice(string.ascii_uppercase + string.digits) \
@@ -399,7 +399,7 @@ def new_user():
 
     if request.method == 'POST':
         #Test for valid state token (unique session anti-forgery)
-        print('testing for valid state token')
+        #print('testing for valid state token')
         if request.form.get('state') != login_session.get('state'):
             response = make_response(json.dumps('Invalid state parameter'), 401)
             response.headers['Content-Type'] = 'application/json'
@@ -415,32 +415,32 @@ def new_user():
         pin = str(request.form.get('pin'))
 
         if pin != PIN:
-            print("incorrect PIN")
+            #print("incorrect PIN")
             # render intermediate screen
-            msg = ["User registration is not possible.",
+            msg = ["User registration is not possible.", 
                    "You are not authorized (incorrect PIN)."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
         if (not username) or (not password):
-            print("missing arguments")
+            #print("missing arguments")
             # render intermediate screen
-            msg = ["User registration is not possible.",
+            msg = ["User registration is not possible.", 
                    "Missing arguments. It is necessary username and password."]
             return render_template('message.html', msg=msg, dest="/new_user", my_time=8000)
 
         #Check to see if password matches
         if password != conf_password:
-            print("password does not match")
+            #print("password does not match")
             # render intermediate screen
-            msg = ["User registration is not possible.",
+            msg = ["User registration is not possible.", 
                    "Password confirmation does not match."]
             return render_template('message.html', msg=msg, dest="/new_user", my_time=8000)
 
         #Check to see if security question answer matches
         if (security_question_answer) and (security_question_answer != conf_security_question_answer):
-            print("security question answer does not match")
+            #print("security question answer does not match")
             # render intermediate screen
-            msg = ["User registration is not possible.",
+            msg = ["User registration is not possible.", 
                     "Security question answer confirmation does not match."]
             return render_template('message.html', msg=msg, dest="/new_user", my_time=8000)
 
@@ -449,30 +449,30 @@ def new_user():
         users = session.query(User).all()
         for user in users:
             decrypted_username = f.decrypt(user.username).decode()
-            print("username:", username)
+            #print("username:", username)
             if username == decrypted_username:
                 id = user.id
 
         user = session.query(User).filter_by(id=id).first()
         if user:
-            print("existing username")
+            #print("existing username")
             # render intermediate screen
-            msg = ["User with username "  +  f.decrypt(user.username).decode() + " already exists.",
+            msg = ["User with username "  +  f.decrypt(user.username).decode() + " already exists.", 
                    "Registration is not possible."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
         #Create new user
-        print("Requisites verified. Registering new user...")
+        #print("Requisites verified. Registering new user...")
         user = User(name=f.encrypt(name.encode()),
                     username=f.encrypt(username.encode()),
                     security_question=f.encrypt(security_question.encode()))
         user.hash_password(password)
         user.hash_passw_phrase_answer(security_question_answer)
-        print('username', f.decrypt(user.username).decode(), ' created')
+        #print('username', f.decrypt(user.username).decode(), ' created')
         session.add(user)
         session.commit()
         # render intermediate screen
-        msg = ["User " + f.decrypt(user.username).decode() + " successfully registered!",
+        msg = ["User " + f.decrypt(user.username).decode() + " successfully registered!", 
                 "Please, wait. Returning to the login page..."]
         return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
@@ -484,7 +484,7 @@ def disconnect():
     if 'provider' in login_session:
         #This is for a locally registered user
         if login_session['provider'] == 'local':
-            print('deleting user locally registered')
+            #print('deleting user locally registered')
             #only locally registered users have a username loaded
             del login_session['username']
         #This is for all users
@@ -502,7 +502,7 @@ def disconnect():
 @app.route('/user/<int:user_id>/inbox')
 @ratelimit(limit=30)
 def showUserMessages(user_id):
-    print("in showUserMessages")
+    #print("in showUserMessages")
     #Grant access only to logged users
     if 'user_id' not in login_session:
         return redirect(url_for('showLogin'))
@@ -518,23 +518,23 @@ def showUserMessages(user_id):
 @app.route('/user/<int:user_id>/message/<int:message_id>')
 @ratelimit(limit=30)
 def showMessage(user_id, message_id):
-    print("in showMessage")
-    print("user_id", user_id)
-    print("message_id", message_id)
+    #print("in showMessage")
+    #print("user_id", user_id)
+    #print("message_id", message_id)
     #Grant access only to logged users
     if 'user_id' not in login_session:
         return redirect(url_for('showLogin'))
     try:
         user = session.query(User).filter_by(id=user_id).one()
-        if not user:
-            print("user not found")
+        #if not user:
+            #print("user not found")
         message = session.query(Message).filter_by(id=message_id,recipient_id=user.id).one()
-        if not message:
-            print("message not found")
-        print("Rendering template showMessage.html")
+        #if not message:
+            #print("message not found")
+        #print("Rendering template showMessage.html")
         return render_template('showMessage.html', user=user, message=message, f=f)
     except:
-        print("Rendering template dataNotFound.html")
+        #print("Rendering template dataNotFound.html")
         return render_template('dataNotFound.html')
 
 
@@ -542,21 +542,21 @@ def showMessage(user_id, message_id):
 @app.route('/message/<int:message_id>/delete/', methods=['GET', 'POST'])
 @ratelimit(limit=30)
 def deleteMessage(message_id):
-    print("in deleteMessage")
+    #print("in deleteMessage")
     #Grant access only to logged users
     if 'user_id' not in login_session:
         return redirect(url_for('showLogin'))
     if request.method == 'POST':
-        print("in deleteMessage: POST")
+        #print("in deleteMessage: POST")
         #try:
         messageToDelete = session.query(Message).filter_by(id=message_id).one()
         user_id = messageToDelete.recipient_id
         user = session.query(User).filter_by(id=user_id).one()
         #Protect messages from unauthorized users
         if messageToDelete.recipient_id != login_session['user_id']:
-            print('message of not authorized: not the creator')
+            #print('message of not authorized: not the creator')
             # render intermediate screen
-            msg = ["** Alert! ***", "You are not authorized to delete this message" +
+            msg = ["** Alert! ***", "You are not authorized to delete this message" + 
                     " because you are not the recipient."]
             return render_template('message.html', msg=msg, dest="/", my_time=8000)
 
@@ -574,7 +574,7 @@ def deleteMessage(message_id):
                                      content             = messageToDelete.content,
                                      deletion_time       = datetime.utcnow())
         session.add(newMessageToLog)
-        print("deleted message added to log")
+        #print("deleted message added to log")
         session.commit()
         try:
             message_title = f.decrypt(messageToDelete.title).decode()
@@ -586,13 +586,13 @@ def deleteMessage(message_id):
         return redirect(url_for('showUserMessages', user_id=user_id))
 
     else:
-        print("in deleteMessage: GET")
+        #print("in deleteMessage: GET")
         try:
             messageToDelete = session.query(Message).filter_by(id=message_id).one()
             user_id = messageToDelete.recipient_id
             return render_template('deleteMessage.html', user_id=user_id, message=messageToDelete, f=f)
         except:
-            print("in deleteMessage: GET: except")
+            #print("in deleteMessage: GET: except")
             return render_template('dataNotFound.html')
 
 
@@ -600,7 +600,7 @@ def deleteMessage(message_id):
 @app.route('/user/<int:user_id>/message/new', methods=['GET', 'POST'])
 @ratelimit(limit=30)
 def newMessage(user_id):
-    print('in new message')
+    #print('in new message')
     #Grant access only to logged users
     if 'user_id' not in login_session:
         return redirect(url_for('showLogin'))
@@ -612,13 +612,13 @@ def newMessage(user_id):
         #Verify the messages limit for the recipient
         recipient_messages = session.query(Message).filter_by(recipient_id=recipient_id).all()
         n_messages = len(recipient_messages)
-        print("recipient messages count:", n_messages)
+        #print("recipient messages count:", n_messages)
         if n_messages > RECIPIENT_MESSAGES_LIMIT:
             # render intermediate screen
             msg = ["Messages limit achieved for the recipient.",
                    "The maximum number of messages is " + str(RECIPIENT_MESSAGES_LIMIT)]
-            return render_template('message.html', msg=msg,
-                                    dest="/user/" + str(login_session['user_id']) + "/inbox",
+            return render_template('message.html', msg=msg, 
+                                    dest="/user/" + str(login_session['user_id']) + "/inbox", 
                                     my_time=8000)
 
         recipient = session.query(User).filter_by(id=recipient_id).one()
@@ -648,26 +648,26 @@ def newMessage(user_id):
 @app.route('/dbdump')
 @ratelimit(limit=30)
 def messagesDump():
-    print("Dumping the database")
+    #print("Dumping the database")
     dump_success = 1
     try:
-        retcode = subprocess.call(["pg_dump", "-d", "messages",  "--no-owner", "-f", "dbdump/db.sql" ])
-        print("process return code:" + str(retcode))
+        retcode = subprocess.call(["pg_dump", "-d", "messages",  "--no-owner", "-f", app.config['UPLOAD_FOLDER'] + "/db.sql" ])
+        #print("process return code:" + str(retcode))
 
     except Exception as e:
             dump_success = 0
-            print('Exception happened during dump %s' %(e))
+            #print('Exception happened during dump %s' %(e))
             flash('Exception happened during dump')
 
     if dump_success == 1:
-        print('Database dump successful')
-        flash('Database dump successful')
-        print("upload from dir:" + app.config['UPLOAD_FOLDER'])
-        flash('Wait for download in your local directory...')
+        #print('Database dump successful')
+        #flash('Database dump successful')
+        #print("upload from dir:" + app.config['UPLOAD_FOLDER'])
+        #flash('Wait for download in your local directory...')
         return send_from_directory(app.config['UPLOAD_FOLDER'], "db.sql")
-    else:
-        print('db dump failure')
-
+    #else:
+        #print('db dump failure')
+    
     return redirect(url_for('showLogin'))
 
 
