@@ -1,0 +1,54 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="row divider blue">
+  <div class="col-md-12"></div>
+</div>
+<div class="row banner menu">
+  <div class="col-md-6 col-md-offset-1">
+    <h1>Inbox</h1>
+  </div>
+</div>
+
+<div class="flash">
+  {% with flashed_messages = get_flashed_messages() %}
+    {% if flashed_messages %}
+    <ul>
+      {% for flashed_message in flashed_messages %}
+      <li> <strong> {{ flashed_message }} </strong> </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+</div>
+
+<div class="row">
+    {% for message in messages %}
+      <div class="col-md-10 col-offset-1">
+        <div class="message">
+          <h5>From: {{ f.decrypt(message.sender_name).decode() }}
+              ({{ f.decrypt(message.sender_username).decode() }})</h5>
+          <a href="{{ url_for('showMessage', user_id=user.id, message_id=message.id) }}">
+          <p>{{ f.decrypt(message.title).decode() }}</p></a>
+        </div>
+      </div>
+    {% endfor %}
+</div>
+
+<div class="row justify-content-md-left">
+  <div class="col-md-10 justify-content-md-left">
+    <br/>
+    <div class="new-message-buttons">
+      <a href = "{{ url_for('newMessage', user_id=user.id) }}">
+        <button type="button" class="btn btn-default">
+          <span aria-hidden="true"></span> Write New Message
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<div class="row padding-bottom"></div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<div class="row divider green">
+  <div class="col-md-12"></div>
+</div>
+<div class="row banner menu">
+  <div class="col-md-6 col-md-offset-1">
+    <h1>Inbox</h1>
+    <h3>Message Content</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10 col-lg-12 padding-none">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+        <div class="message">
+          <h5>From: {{ f.decrypt(message.sender_name).decode() }}
+            ({{ f.decrypt(message.sender_username).decode() }})</h5>
+          <p>{{ f.decrypt(message.title).decode() }}</p>
+          <p>{{ message.creation_time.strftime('%Y-%m-%d %H:%M:%S GMT') }}</p>
+          <br>
+          <p>{{ f.decrypt(message.content).decode() }}</p>
+          <br>
+          <a class="margin-right" href="{{ url_for('deleteMessage', message_id=message.id) }}">Delete</a>
+          <a href="{{ url_for('showUserMessages', user_id=user.id) }}">Cancel</a>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row padding-bottom"></div>
+
+{% endblock %}

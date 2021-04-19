@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block content %}
+    <br><br><h4>{{ msg[0] }}<br>{{ msg[1] }}<br><br>
+    Redirecting...</h4>
+    <script nonce="{{ csp_nonce() }}">
+        var my_time = "{{my_time}}";
+        var dest = "{{dest}}";
+        setTimeout(function(){window.location.href=dest;}, my_time);
+    </script>
+{% endblock %}

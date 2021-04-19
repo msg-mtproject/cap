@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+{% block content %}
+  <title>Index Page</title>
+  <div class="flash">
+    {% with flashed_messages = get_flashed_messages() %}
+      {% if flashed_messages %}
+      <ul>
+        {% for flashed_message in flashed_messages %}
+        <li> <strong> {{ flashed_message }} </strong> </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <div id="login_page">
+    <!-- LOCAL LOGIN USER FORM -->
+    <div id="local_login">
+      <h3></h3>
+      <form action="{{ url_for('local_login') }}" method="POST">
+        <div>
+          <label for="name">Username:</label>
+          <br>
+          <input type ="text" maxlength="80" size="32" name="username" required>
+          <br>
+          <br>
+          <label for="name">Password:</label>
+          <br>
+          <input type ="password" maxlength="32" size="32" name="password" required>
+          <br>
+          <br>
+          <button type="submit" class="btn"> Login* </button>
+        </div>
+        <input type="hidden" name="state" value="{{state}}">
+      </form>
+      <!-- END OF LOCAL LOGIN USER FORM -->
+
+      <br>
+      <span><a href="{{ url_for('new_user') }}">Register New User</a> </span>
+      <span> | </span>
+      <span><a href = "{{ url_for('resetPassword') }}">Reset the password</a></span>
+      <span> | </span>
+      <span><a href = "{{ url_for('showLogin') }}">Cancel</a> </span>
+      
+      <div class="padding-bottom"></div>
+
+      <div>
+        <p>If you don't have a website account,<br>
+           please create a local account first, by clicking 'Register New User'.<p>
+        <p>*But before sending any data, verify if the connection is secure.
+            See the site identity button in the address bar.
+            Observe if there is a padlock. This means a secure connection.
+            But, it cannot have any warning triangle or red sign.<p>
+        <h4>This website is only for studying and testing purposes.</h4>
+
+      </div>
+    </div>
+  </div>
+  {% endblock %}
