@@ -649,6 +649,14 @@ def newMessage(user_id):
 @ratelimit(limit=30)
 def messagesDump():
     #print("Dumping the database")
+    # delete the anterior file
+    try:
+        os.remove(app.config['UPLOAD_FOLDER'] + "/db.sql" )
+        #print("process return code:" + str(retcode))
+    except Exception as e:
+            #print('Exception happened during deletion %s' %(e))
+            flash('Exception happened during deletion')
+
     dump_success = 1
     try:
         retcode = subprocess.call(["pg_dump", "-d", "messages",  "--no-owner", "-f", app.config['UPLOAD_FOLDER'] + "/db.sql" ])

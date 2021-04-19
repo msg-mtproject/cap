@@ -117,6 +117,8 @@ It is written in **Python** (<https://www.python.org/>) and also uses **Flask** 
 
 * The `UPLOAD_FOLDER` variable (inside the `project.py`) should be the absolute path directory of the dump file on the server.
 
+* Please, clear the browser cache after the `/dbdump` command.
+
 * The app implements `rate limiting` (<https://en.wikipedia.org/wiki/Rate_limiting>).
 
 
