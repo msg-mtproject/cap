@@ -1,4 +1,5 @@
 # Messages Project
+(by Marcos Tewfiq)
 
 * For user registration, user should inform the `PIN` as `cap2021` for the capstone project running on web (see the link on the page course).
 
