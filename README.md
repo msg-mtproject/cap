@@ -1,5 +1,6 @@
 # Messages Project
-(by Marcos Tewfiq)
+(by Marcos Tewfiq, as part of the course Capstone by University of Maryland, College Park on Coursera)
+(The website is hosted at https://m4test.com. The students are authorized to use and test the website.) (apr 2021)
 
 * For user registration, user should inform the `PIN` as `cap2021` for the capstone project running on web (see the link on the page course).
 
