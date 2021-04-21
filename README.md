@@ -13,7 +13,7 @@ It is written in **Python** (<https://www.python.org/>) and also uses **Flask** 
 
 * These instructions are for installing the app as a Python local server, so we are not going to enter into details about the Apache server and configuration.
 
-* You need to create and installation folder and copy the **Python** files `database_setup.py`, `make_users_and_messages.py` and `project.py`, supplied with this project, to a directory at the **Ubuntu 18.04 Linux** or equivalent (<https://www.ubuntu.com/>), that will host the "server". Also copy the `static` and `template` folders to the same folder.
+* You need to create an installation folder and copy the **Python** files `database_setup.py`, `make_users_and_messages.py` and `project.py`, supplied with this project, to a directory at the **Ubuntu 18.04 Linux** or equivalent (<https://www.ubuntu.com/>), that will host the "server". Also copy the `static` and `template` folders to the same folder.
 
 * You need to install and set up the **PostgreSQL**, the **Redis** server (<https://redis.io/>), and (if it would serve with) the **Apache HTTP Server** (<https://httpd.apache.org>). As we are going to run locally (logged in into the host, using the local web browser), we do not need to install the Apache.
 
@@ -97,7 +97,7 @@ It is written in **Python** (<https://www.python.org/>) and also uses **Flask** 
 
   It will create two users ('user1':1234) and ('user2':2345) and some automatic messages between them.
 
-* If it were a web server, the **Apache2** (with the `libapache2-mod-wsgi` module installed) it would load the **Python** modules as a **WSGI** application.
+* If it were a web server, the **Apache2** (with the `libapache2-mod-wsgi-py3` module installed) it would load the **Python** modules as a **WSGI** application.
 
 * Users can authenticate at the `Login` page. On the same page, there are links to register a new user and to reset the password.
 
